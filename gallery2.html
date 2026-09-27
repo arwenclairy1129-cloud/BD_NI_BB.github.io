@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday LOVEEEYYY!❤️</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <link rel="stylesheet" href="stylegallery2.css" />
+</head>
+
+<body>
+
+  <div id="canvas-container"></div>
+
+  <section class="slider-container">
+    <div class="slider-images">
+      <div class="slider-img">
+        <img src="cute2/cute1.jpg" alt="1" />
+        <h1>BUT</h1>
+        <div class="details">
+          <h2>BUT</h2>
+
+        </div>
+      </div>
+      <div class="slider-img">
+        <img src="cute2/cute2.jpg" alt="2" />
+        <h1>I'LL</h1>
+        <div class="details">
+          <h2>I'LL</h2>
+
+
+        </div>
+      </div>
+      <div class="slider-img">
+        <img src="cute2/cute4.jpg" alt="3" />
+        <h1>ALWAYS</h1>
+        <div class="details">
+          <h2>ALWAYS</h2>
+
+        </div>
+      </div>
+      <div class="slider-img default-main">
+        <img src="cute2/cute3.jpg" alt="4" />
+        <h1>BE</h1>
+        <div class="details">
+          <h2>BE</h2>
+
+        </div>
+      </div>
+      <div class="slider-img">
+        <img src="cute2/cute5.jpg" alt="5" />
+        <h1>THE</h1>
+        <div class="details">
+          <h2>THE</h2>
+
+        </div>
+      </div>
+      <div class="slider-img">
+        <img src="cute2/cute6.jpg" alt="6" />
+        <h1>LUCKY</h1>
+        <div class="details">
+          <h2>LUCKY</h2>
+
+        </div>
+      </div>
+      <div class="slider-img">
+        <img src="cute2/cute7.jpg" alt="7" />
+        <h1>ONE</h1>
+        <div class="details">
+          <h2>ONE</h2>
+
+        </div>
+      </div>
+    </div>
+    <div class="gallery-btn-group">
+      <a href="gallery.html" class="btn">Back</a>
+      <a href="ready.html" class="btn">Next Slide</a>
+    </div>
+  </section>
+
+
+  <script>
+    const defaultCenter = document.querySelector('.slider-img.default-main');
+    const slides = Array.from(document.querySelectorAll('.slider-img'));
+
+    function syncWidths() {
+      slides.forEach((slide) => {
+        const isDefault = slide.classList.contains('default-main');
+        const isActive = slide.classList.contains('active');
+        slide.style.width = isDefault || isActive ? '400px' : '110px';
+      });
+    }
+
+    function resetCenter() {
+      slides.forEach((slide) => slide.classList.remove('active'));
+      slides.forEach((slide) => slide.classList.remove('default-main'));
+      if (defaultCenter) defaultCenter.classList.add('default-main');
+      syncWidths();
+    }
+
+    function setActiveSlide(nextSlide) {
+      slides.forEach((slide) => {
+        slide.classList.remove('active');
+        slide.classList.remove('default-main');
+      });
+
+      if (nextSlide && nextSlide !== defaultCenter) {
+        nextSlide.classList.add('active');
+      } else if (defaultCenter) {
+        defaultCenter.classList.add('default-main');
+      }
+
+      syncWidths();
+    }
+
+    slides.forEach((slide) => {
+      if (slide === defaultCenter) return;
+      slide.addEventListener('mouseenter', () => setActiveSlide(slide));
+      slide.addEventListener('click', () => setActiveSlide(slide));
+    });
+
+    const gallery = document.querySelector('.slider-images');
+    if (gallery) {
+      gallery.addEventListener('mouseleave', resetCenter);
+    }
+
+    const musicKey = 'gallery2-music-state';
+    const galleryAudio = new Audio('YourUniverse.mp3');
+    galleryAudio.loop = true;
+    galleryAudio.volume = 0.6;
+    galleryAudio.preload = 'auto';
+    galleryAudio.currentTime = 64;
+
+    const saveMusicState = () => {
+      try {
+        localStorage.setItem(musicKey, JSON.stringify({
+          currentTime: galleryAudio.currentTime || 0,
+          isPlaying: !galleryAudio.paused
+        }));
+      } catch (error) {}
+    };
+
+    const playGalleryAudio = () => {
+      try {
+        const savedState = JSON.parse(localStorage.getItem(musicKey) || '{}');
+        const savedCurrentTime = Number(savedState.currentTime || 0);
+        if (savedCurrentTime > 0) {
+          galleryAudio.currentTime = savedCurrentTime;
+        } else {
+          galleryAudio.currentTime = 64;
+        }
+      } catch (error) {
+        galleryAudio.currentTime = 64;
+      }
+
+      galleryAudio.play().catch(() => {});
+    };
+
+    galleryAudio.addEventListener('timeupdate', saveMusicState);
+    window.addEventListener('beforeunload', saveMusicState);
+    document.querySelectorAll('a[href]').forEach((link) => {
+      link.addEventListener('click', saveMusicState, { passive: true });
+    });
+
+    playGalleryAudio();
+    document.addEventListener('click', playGalleryAudio, { once: true });
+
+    // Three.js Heart Background
+    const container = document.getElementById('canvas-container');
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 30;
+
+    // Improved Heart Geometry
+    const x = 0, y = 0;
+    const heartShape = new THREE.Shape();
+    heartShape.moveTo(x + 0.5, y + 0.5);
+    heartShape.bezierCurveTo(x + 0.5, y + 0.5, x + 1, y, x, y);
+    heartShape.bezierCurveTo(x - 1, y, x - 1, y + 1.5, x - 1, y + 1.5);
+    heartShape.bezierCurveTo(x - 1, y + 2.5, x + 0.5, y + 3.5, x + 0.5, y + 3.5);
+    heartShape.bezierCurveTo(x + 0.5, y + 3.5, x + 2, y + 2.5, x + 2, y + 1.5);
+    heartShape.bezierCurveTo(x + 2, y + 1.5, x + 2, y, x + 1, y);
+    heartShape.bezierCurveTo(x + 0.5, y, x + 0.5, y + 0.5, x + 0.5, y + 0.5);
+
+    const extrudeSettings = {
+      depth: 0.5,
+      bevelEnabled: true,
+      bevelSegments: 3,
+      bevelSize: 0.2,
+      bevelThickness: 0.3
+    };
+
+    const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+
+    // Create multiple hearts with different colors and properties
+    const hearts = [];
+    const colors = [
+      0xff6b6b, 0xff8e8e, 0xffb3b3, 0xffd8d8,
+      0xff9e9e, 0xffc1c1, 0xff6b8e, 0xff8eb3
+    ];
+
+    for (let i = 0; i < 25; i++) {
+      const material = new THREE.MeshPhongMaterial({
+        color: colors[Math.floor(Math.random() * colors.length)],
+        emissive: 0xff0000,
+        emissiveIntensity: 0.1,
+        shininess: 100,
+        transparent: true,
+        opacity: 0.9
+      });
+
+      const heart = new THREE.Mesh(heartGeometry, material);
+
+      // Random position and scale
+      heart.position.x = (Math.random() - 0.5) * 50;
+      heart.position.y = (Math.random() - 0.5) * 50;
+      heart.position.z = (Math.random() - 0.5) * 50;
+
+      const scale = Math.random() * 0.8 + 0.5;
+      heart.scale.set(scale, scale, scale);
+
+      // Random rotation
+      heart.rotation.x = Math.random() * Math.PI;
+      heart.rotation.y = Math.random() * Math.PI;
+
+      // Store animation properties
+      heart.userData = {
+        speedX: Math.random() * 0.02 - 0.01,
+        speedY: Math.random() * 0.02 - 0.01,
+        speedZ: Math.random() * 0.02 - 0.01,
+        rotationSpeedX: Math.random() * 0.01,
+        rotationSpeedY: Math.random() * 0.01,
+        originalX: heart.position.x,
+        originalY: heart.position.y,
+        originalZ: heart.position.z,
+        floatDistance: 2 + Math.random() * 3
+      };
+
+      scene.add(heart);
+      hearts.push(heart);
+    }
+
+    // Add lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Animate hearts
+      hearts.forEach(heart => {
+        // Floating animation
+        const time = Date.now() * 0.001;
+        heart.position.x = heart.userData.originalX + Math.sin(time * heart.userData.speedX * 10) * heart.userData.floatDistance;
+        heart.position.y = heart.userData.originalY + Math.sin(time * heart.userData.speedY * 10) * heart.userData.floatDistance;
+        heart.position.z = heart.userData.originalZ + Math.sin(time * heart.userData.speedZ * 10) * heart.userData.floatDistance;
+
+        // Rotation
+        heart.rotation.x += heart.userData.rotationSpeedX;
+        heart.rotation.y += heart.userData.rotationSpeedY;
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    document.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      // Only fade if it's not an anchor link or javascript:void
+      if (href && !href.startsWith('#') && !href.startsWith('javascript')) {
+        e.preventDefault();
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = href;
+        }, 600); // Match the CSS transition duration
+      }
+    });
+  });
+  </script>
+  </script>
+</body>
+
+</html>
